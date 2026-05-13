@@ -3,6 +3,11 @@ let pen = canvas.getContext("2d");
 let snakeCell = [[0, 0]];
 let cell = 50;
 let direction = "right";
+let gameOver = false;
+let id = setInterval(() => {
+  draw();
+  update();
+}, 200);
 
 document.addEventListener("keydown", (e) => {
   console.log(e);
@@ -15,10 +20,13 @@ document.addEventListener("keydown", (e) => {
   } else {
     direction = "right";
   }
-
 });
 
 function draw() {
+  if (gameOver == true) {
+    clearInterval(id);
+    return;
+  }
   pen.fillStyle = "red";
   pen.clearRect(0, 0, 1000, 600);
   for (let a of snakeCell) {
@@ -35,21 +43,28 @@ function update() {
   if (direction == "right") {
     newX = headX + cell;
     newY = headY;
+    if (newX == 1000) {
+      gameOver = true;
+    }
   } else if (direction == "left") {
     newX = headX - cell;
     newY = headY;
+    if (newX < 0) {
+      gameOver = true;
+    }
   } else if (direction == "down") {
     newX = headX;
     newY = headY + cell;
+    if (newY == 600) {
+      gameOver = true;
+    }
   } else {
     newX = headX;
     newY = headY - cell;
+    if (newY < 0) {
+      gameOver = true;
+    }
   }
   snakeCell.push([newX, newY]);
   snakeCell.shift();
 }
-
-setInterval(() => {
-  draw();
-  update();
-}, 200);
