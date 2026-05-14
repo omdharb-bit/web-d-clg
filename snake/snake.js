@@ -4,10 +4,12 @@ let snakeCell = [[0, 0]];
 let cell = 50;
 let direction = "right";
 let gameOver = false;
+let randomCell = generateR();
+let score = 0;
 let id = setInterval(() => {
   draw();
   update();
-}, 200);
+}, 100);
 
 document.addEventListener("keydown", (e) => {
   console.log(e);
@@ -25,15 +27,24 @@ document.addEventListener("keydown", (e) => {
 function draw() {
   if (gameOver == true) {
     clearInterval(id);
+    pen.fillStyle = "snow";
+    pen.font = "40px sans-sarif";
+    pen.fillText("Game over!!", 200, 100);
     return;
   }
+
   pen.fillStyle = "red";
   pen.clearRect(0, 0, 1000, 600);
   for (let a of snakeCell) {
     pen.fillRect(a[0], a[1], cell, cell);
   }
+  pen.fillStyle = "pink";
+  pen.font = "40px sans-sarif";
+  pen.fillText(`${score}`, 100, 300);
+  pen.fillStyle = "yellow";
+  pen.fillRect(randomCell[0], randomCell[1], cell, cell);
 }
-draw();
+
 function update() {
   let headX = snakeCell[snakeCell.length - 1][0];
   let headY = snakeCell[snakeCell.length - 1][1];
@@ -66,5 +77,19 @@ function update() {
     }
   }
   snakeCell.push([newX, newY]);
-  snakeCell.shift();
+  if (newX == randomCell[0] && newY == randomCell[1]) {
+    randomCell = generateR();
+    score++;
+  } else {
+    snakeCell.shift();
+  }
 }
+
+function generateR() {
+  return [
+    Math.floor((Math.random() * 950) / cell) * cell,
+    Math.floor((Math.random() * 550) / cell) * cell,
+  ];
+}
+
+ 
